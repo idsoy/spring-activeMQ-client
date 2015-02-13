@@ -2,27 +2,28 @@ package org.llh.message.service.impl;
 
 import java.util.ArrayList;
 
-import javax.annotation.Resource;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 
 import org.llh.message.service.MessageClientService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
 public class MessageClientServiceImpl implements MessageClientService{
 	
 	//站内信队列
-	private static final String MESSAGE_TIP_QUEUE= "org.llh.message.tip.queue";
+	private String messageTipQueue;
 	//批量发送站内信队列
-	private static final String MESSAGE_TIP_QUEUE_LIST= "org.llh.message.tip.queue.list";
+	private String messageTipQueueList;
 	
-	@Resource
+	@Autowired
 	private JmsTemplate jmsTemplate;
 	
+	@Override
 	public void sendTipMsg(final String sender) {
-			jmsTemplate.send(MESSAGE_TIP_QUEUE, new MessageCreator() {
+			jmsTemplate.send(messageTipQueue, new MessageCreator() {
 			@Override
 			public Message createMessage(Session session) throws JMSException {
 				return session.createObjectMessage(sender);
@@ -30,14 +31,23 @@ public class MessageClientServiceImpl implements MessageClientService{
 		});
 	}
 	
+	@Override
 	public void sendTipMsgList(final ArrayList<String> senders) {
-			jmsTemplate.send(MESSAGE_TIP_QUEUE_LIST, new MessageCreator() {
+			jmsTemplate.send(messageTipQueueList, new MessageCreator() {
 			
 			@Override
 			public Message createMessage(Session session) throws JMSException {
 				return session.createObjectMessage(senders);
 			}
 		});
+	}
+
+	public void setMessageTipQueue(String messageTipQueue) {
+		this.messageTipQueue = messageTipQueue;
+	}
+
+	public void setMessageTipQueueList(String messageTipQueueList) {
+		this.messageTipQueueList = messageTipQueueList;
 	}
 	
 }

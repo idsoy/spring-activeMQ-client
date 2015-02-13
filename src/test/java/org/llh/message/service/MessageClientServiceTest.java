@@ -23,7 +23,7 @@ public class MessageClientServiceTest {
 	@Test
 	public void sendTipMsg() {
 		
-		messageClientService.sendTipMsg("zhouwen");
+		messageClientService.sendTipMsg("idsoy");
 	}
 
 }
